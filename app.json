@@ -35,6 +35,8 @@
     "experiments": {
       "tsconfigPaths": true,
       "typedRoutes": true
-    }
-  }
+    },
+    "sdkVersion": "49.0.0"
+  },
+  "name": "bisq-offers"
 }

@@ -3,43 +3,8 @@ import { ActivityIndicator, StyleSheet, FlatList, NativeModules, Platform, Image
 import { Text, View } from '@/components/Themed';
 import { Separator } from './Separator';
 import Formatter from '@/models/static/Formatter';
+import Offer from '@/models/Offer';
 
-class Offer {
-
-  offer_id;
-  offer_date;
-  direction;
-  min_amount;
-  amount;
-  price;
-  volume;
-  payment_method;
-  offer_fee_txid?;
-
-  constructor(offer_id: string, offer_date: number, direction: string, min_amount: string, amount: string, price: string, volume: string, payment_method: string, offer_fee_txid?: any) {
-    this.offer_id = offer_id;
-    this.offer_date = offer_date;
-    this.direction = direction;
-    this.min_amount = min_amount;
-    this.amount = amount;
-    this.price = price;
-    this.volume = volume;
-    this.payment_method = payment_method;
-    this.offer_fee_txid = offer_fee_txid;
-  }
-}
-
-// type Offer = {
-//   offer_id: string;
-//   offer_date: number;
-//   direction: string;
-//   min_amount: string;
-//   amount: string;
-//   price: string;
-//   volume: string;
-//   payment_method: string;
-//   offer_fee_txid?: any;
-// }
 
 export enum Operation {
   Sell = "sells",
@@ -56,7 +21,7 @@ const OfferList = (props: Market) => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState<Offer[]>([]);
 
-  const market = `${props.crypto}_${props.fiat}`;
+  const market = `${props.crypto.toLowerCase()}_${props.fiat.toLowerCase()}`;
 
   let locale =
     Platform.OS === 'ios'
@@ -75,12 +40,6 @@ const OfferList = (props: Market) => {
       lastPrice = Math.floor(jsonPrice[0].price);
 
       console.log(lastPrice);
-
-      // const tradeWs = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin')
-
-      // tradeWs.onmessage = function (msg) {
-      //   console.log(msg.data)
-      // }
 
     } catch (error) {
       console.error(error);
@@ -127,7 +86,6 @@ const OfferList = (props: Market) => {
         <ActivityIndicator />
       ) : (
         <FlatList
-        scrollEventThrottle={16}
           data={data}
           keyExtractor={({ offer_id }) => offer_id}
           renderItem={({ item }) => (
@@ -135,7 +93,7 @@ const OfferList = (props: Market) => {
             <View style={{ paddingVertical: 8, paddingHorizontal: 20 }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={styles.title}>
-                  {Formatter.toCurrency(item.price, props.fiat, locale)}
+                  {Formatter.toCurrency(item.price, props.fiat.toLowerCase(), locale)}
                 </Text>
 
                 <View style={{ backgroundColor: '#2cb43870', height: 30, width: 110, justifyContent: 'center', borderRadius: 4 }}>
